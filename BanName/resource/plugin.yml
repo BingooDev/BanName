@@ -1,0 +1,9 @@
+name: BanName
+version: 1.0.0
+main: nu.granskogen.spela.BanName.BanName
+author: Bingoo
+depend: [AdvancedBan]
+
+commands:
+  banname:
+    description: Ban a name but not the uuid, automaticly kicks the player from the server.

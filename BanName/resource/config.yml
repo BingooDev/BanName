@@ -1,0 +1,21 @@
+messages:
+  kickReason: "&cDitt namn är inte tillåtet på Granskogen. Du är välkommen tillbaka när du har bytt namn."
+  banMessage:
+    operatorSuccessMessage: "&aNamnet &2{name} &aär nu bannlyst från servern."
+      layout:
+      - '&8&m+------------&8[&4&lNamn Bannlyst&8]&m------------+'
+      - ''
+      - '&2&l» &a&lDatum vid bannlysning: &f%DATE%'
+      - '&2&l» &a&lBannlyst av: &f%OPERATOR%'
+      - ''
+      - '&2&l» &a&lAnledning: &fDitt namn är inte tillåtet på Granskogen. Du är välkommen tillbaka när du har bytt namn.'
+      - ''
+      - '&2&l» &a&lDiscord: &fwww.granskogen.nu/discord'
+      - '&2&l» &a&lMail: &fsupport@granskogen.nu'
+      - ''
+      - '&8&m+----------------------------------------+'
+  sytax:
+    banName: "&7Syntax: /banName <spelarnamn>"
+  error:
+    noPermission: "&cÅtkomst nekad!"
+    alreadyBanned: "&cNamnet är redan bannlyst."
