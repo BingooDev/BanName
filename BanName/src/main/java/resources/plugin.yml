@@ -1,0 +1,4 @@
+name: BanName
+version: 1.0.0
+main: nu.granskogen.spela.BanName.BanName
+author: Bingoo
