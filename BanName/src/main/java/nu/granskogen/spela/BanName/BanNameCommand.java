@@ -7,54 +7,63 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.gson.JsonObject;
 
-public class BanNameCommand implements CommandExecutor {
-	BanName pl = BanName.getPlugin(BanName.class);
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+public class BanNameCommand extends Command implements TabExecutor {
+	BanName pl = BanName.getInstance();
+
+	public BanNameCommand(String name) {
+		super(name);
+	}
+
+
+	@Override
+	public void execute(CommandSender sender, String[] args) {
 		if (sender.hasPermission("BanName.ban")) {
 			if (args.length < 1) {
 				pl.sendMessageToCommandSenderFromConfig(sender, "syntax.banName");
-				return false;
+				return;
 			}
-			@SuppressWarnings("deprecation")
-			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+			String name = args[0].toLowerCase();
+			ProxiedPlayer offlinePlayer = pl.getProxy().getPlayer(name);
 			
 			Connection conn = pl.dbm.getConnection();
 			boolean banExists = false;
 			try {
 				PreparedStatement st = conn.prepareStatement(SQLQuery.SELECT_NAME.toString());
-				st.setString(1, offlinePlayer.getName());
+				st.setString(1, name);
 				ResultSet result = st.executeQuery();
 				if (result.next()) {
 					banExists = true;
-					// Encrypted and Base64 encoded password read from database
 					boolean isBanned = result.getBoolean("isBanned");
 					if(isBanned) {
 						pl.sendMessageToCommandSenderFromConfig(sender, "error.alreadyBanned");
 						pl.dbm.closeConnection();
-						return false;
+						return;
 					}
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				pl.dbm.closeConnection();
 				pl.sendMessageToCommandSenderFromConfig(sender, "error.SQL");
-				return false;
+				return;
 			}
 			
 			String operator = "Console";
-			if (sender instanceof Player) {
-				Player p = (Player) sender;
+			if (sender instanceof ProxiedPlayer) {
+				ProxiedPlayer p = (ProxiedPlayer) sender;
 				operator = p.getName();
 			}
 			
@@ -67,51 +76,73 @@ public class BanNameCommand implements CommandExecutor {
 			try {
 				if(banExists) {
 					st = conn.prepareStatement(SQLQuery.SET_BANNED_NAME_TRUE.toString());
-					st.setString(1, offlinePlayer.getName());
+					st.setString(1, operator);
+					st.setString(2, name);
 					st.execute();
 					
-					st = conn.prepareStatement(SQLQuery.INSERT_INTO_LOG.toString());
-					st.setString(1, "uppdate_ban");
+					PreparedStatement st2 = conn.prepareStatement(SQLQuery.INSERT_INTO_LOG.toString());
+					st2.setString(1, "uppdate_ban");
 					JsonObject json = new JsonObject();
 					json.addProperty("operator", operator);
 					json.addProperty("isBanned", true);
-					json.addProperty("banned_name", offlinePlayer.getName());
-					st.setString(2, json.toString());
-					st.execute();
+					json.addProperty("banned_name", name);
+					st2.setString(2, json.toString());
+					st2.execute();
 				} else {					
 					st = conn.prepareStatement(SQLQuery.INSERT_NAME.toString());
-					st.setString(1, offlinePlayer.getName());
+					st.setString(1, name);
 					st.setString(2, operator);
 					st.setBoolean(3, true); //Status for if the playername is banned
 					st.execute();
-					st = conn.prepareStatement(SQLQuery.INSERT_INTO_LOG.toString());
-					st.setString(1, "create_ban");
+					
+					PreparedStatement st2 = conn.prepareStatement(SQLQuery.INSERT_INTO_LOG.toString());
+					st2.setString(1, "create_ban");
 					JsonObject json = new JsonObject();
 					json.addProperty("operator", operator);
 					json.addProperty("isBanned", true);
-					json.addProperty("banned_name", offlinePlayer.getName());
-					st.setString(2, json.toString());
-					st.execute();
+					json.addProperty("banned_name", name);
+					st2.setString(2, json.toString());
+					st2.execute();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				pl.sendMessageToCommandSenderFromConfig(sender, "error.SQL");
 				pl.dbm.closeConnection();
-				return false;
+				return;
 			}
 			pl.dbm.closeConnection();
 			
-			if(offlinePlayer.isOnline()) {
-				Player player = Bukkit.getPlayer(args[0]);
-				player.kickPlayer(pl.getBannedNameMessage(operator, dateTime));
+			if(offlinePlayer != null && offlinePlayer.isConnected()) {
+				offlinePlayer.disconnect(new TextComponent(pl.getBannedNameMessage(operator, dateTime)));
 			}
 			
-			pl.getServer().getPluginManager().callEvent(new BannedNameEvent(operator, dateTime, offlinePlayer.getName()));
-			pl.sendMessageToCommandSenderFromConfig(sender, "operatorSuccessMessage", "{name}", offlinePlayer.getName());
+			pl.getProxy().getPluginManager().callEvent(new BannedNameEvent(operator, dateTime, name));
+			pl.sendMessageToCommandSenderFromConfig(sender, "operatorSuccessMessage", "{name}", name);
 		} else {
 			pl.sendMessageToCommandSenderFromConfig(sender, "error.noPermission");
 		}
-		return true;
+		return;
 	}
+	
+	@Override
+	public Iterable<String> onTabComplete(CommandSender sender, String[] args)
+    {
+        final String lastArg = ( args.length > 0 ) ? args[args.length - 1].toLowerCase( Locale.ROOT ) : "";
+        return Iterables.transform( Iterables.filter( ProxyServer.getInstance().getPlayers(), new Predicate<ProxiedPlayer>()
+        {
+            @Override
+            public boolean apply(ProxiedPlayer player)
+            {
+                return player.getName().toLowerCase( Locale.ROOT ).startsWith( lastArg );
+            }
+        } ), new Function<ProxiedPlayer, String>()
+        {
+            @Override
+            public String apply(ProxiedPlayer player)
+            {
+                return player.getName();
+            }
+        } );
+    }
 
 }

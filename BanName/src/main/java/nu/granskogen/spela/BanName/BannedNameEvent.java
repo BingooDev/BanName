@@ -1,11 +1,8 @@
 package nu.granskogen.spela.BanName;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import net.md_5.bungee.api.plugin.Event;
 
 public class BannedNameEvent extends Event {
-
-	private static final HandlerList handlers = new HandlerList();
 	private String operator;
 	private String datetime;
 	private String bannedName;
@@ -27,14 +24,5 @@ public class BannedNameEvent extends Event {
 
 	public String getBannedName() {
 		return bannedName;
-	}
-
-	@Override
-	public HandlerList getHandlers() {
-	    return handlers;
-	}
-	 
-	public static HandlerList getHandlerList() {
-	    return handlers;
 	}
 }

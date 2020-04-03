@@ -1,39 +1,55 @@
 package nu.granskogen.spela.BanName;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.plugin.Plugin;
 
-public class BanName extends JavaPlugin {
+public class BanName extends Plugin {
 	public DataBaseManager dbm;
+	private static BanName instance;
+	public ConfigManager cfgm;
 	
 	public void onEnable() {
-		saveDefaultConfig();
-		getCommand("banname").setExecutor(new BanNameCommand());
+		instance = this;
+		loadConfigManager();
+		
+		getProxy().getPluginManager().registerCommand(this, new BanNameCommand("banname"));
+		getProxy().getPluginManager().registerCommand(this, new UnbanNameCommand("unbanname"));
+		getProxy().getPluginManager().registerCommand(this, new CheckCommand("checkname"));
 		
 		dbm = new DataBaseManager();
 		if(!dbm.setup()) {
-			this.setEnabled(false);
+			System.err.println("Couln't connect to database.");
 			return;
 		}
 		
-		getServer().getPluginManager().registerEvents(new BanListener(), this);
+		getProxy().getPluginManager().registerListener(this, new BanListener());
 	}
 	
+	public void loadConfigManager() {
+		cfgm = new ConfigManager();
+		cfgm.setup();
+	}
+	 
 	public void sendMessageToCommandSenderFromConfig(CommandSender sender, String pathOnConfig) {
-		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages."+pathOnConfig)));
+		sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', cfgm.getConfig().getString("messages."+pathOnConfig))));
 	}
 	
 	public void sendMessageToCommandSenderFromConfig(CommandSender sender, String pathOnConfig, String replace, String replaceTo) {
-		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages."+pathOnConfig).replace(replace, replaceTo)));
+		sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', cfgm.getConfig().getString("messages."+pathOnConfig).replace(replace, replaceTo))));
 	}
 	
 	public String getBannedNameMessage(String operator, String date) {
 		String message = "";
-		for (String row : getConfig().getStringList("messages.banMessage.layout")) {
+		for (String row : cfgm.getConfig().getStringList("messages.banMessage.layout")) {
 			message += row + "\n";
 		}
 		message = ChatColor.translateAlternateColorCodes('&', message.replace("%OPERATOR%", operator).replace("%DATE%", date));
 		return message;
+	}
+	
+	public static BanName getInstance() {
+		return instance;
 	}
 }

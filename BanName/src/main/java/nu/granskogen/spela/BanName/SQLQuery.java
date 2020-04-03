@@ -14,8 +14,9 @@ public enum SQLQuery {
 			"    time datetime NOT NULL," + 
 			"    parameters longtext NOT NULL" +
 			");"),
-	SELECT_NAME("SELECT * FROM banned_names WHERE name=?"),
-	SET_BANNED_NAME_TRUE("UPDATE banned_names SET isBanned = true WHERE name=?;"),
+	SELECT_NAME("SELECT * FROM banned_names WHERE name=?;"),
+	SET_BANNED_NAME_TRUE("UPDATE banned_names SET isBanned = true, operator = ?, time_changed = NOW() WHERE name=?;"),
+	SET_BANNED_NAME_FALSE("UPDATE banned_names SET isBanned = false, operator = ?, time_changed = NOW() WHERE name=?;"),
 	INSERT_NAME("INSERT INTO banned_names (name, operator, time_banned, isBanned) VALUES (?, ?, NOW(), ?);"),
 	INSERT_INTO_LOG("INSERT INTO banned_names_log (type, time, parameters) VALUES (?, NOW(), ?);");
 	private String mysql;

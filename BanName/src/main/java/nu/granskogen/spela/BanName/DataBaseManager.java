@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.concurrent.Executors;
 
 public class DataBaseManager {
-	private BanName pl = BanName.getPlugin(BanName.class);
+	private BanName pl = BanName.getInstance();
 	private Connection connection = null;
 	private String host, database, username, password;
 	private int port;
@@ -22,10 +22,10 @@ public class DataBaseManager {
 			}
 			
 			Class.forName("com.mysql.jdbc.Driver");
-			this.host = pl.getConfig().getString("database.host");
-			this.database = pl.getConfig().getString("database.database");
-			this.username = pl.getConfig().getString("database.username");
-			this.password = pl.getConfig().getString("database.password");
+			this.host = pl.cfgm.getConfig().getString("database.host");
+			this.database = pl.cfgm.getConfig().getString("database.database");
+			this.username = pl.cfgm.getConfig().getString("database.username");
+			this.password = pl.cfgm.getConfig().getString("database.password");
 			port = 3306;
 
 			this.url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useSSL=false";
