@@ -1,12 +1,15 @@
 name: BanName
-version: 1.0.0
+version: 1.0.1
 main: nu.granskogen.spela.BanName.BanName
 author: Bingoo
 
 commands:
   banname:
     description: Ban a name but not the uuid, automaticly kicks the player from the server.
+    permission: BanName.ban
   unbanname:
     description: Unnban a player name.
+    permission: BanName.unban
   checkname:
     description: Check if a player name is banned.
+    permission: BanName.check
