@@ -23,7 +23,7 @@ public class BanListener implements Listener {
 			if (result.next()) {
 				boolean isBanned = result.getBoolean("isBanned");
 				if(isBanned) {
-					e.setCancelReason(new TextComponent(pl.getBannedNameMessage(result.getString("operator"), result.getString("time_banned"))));
+					e.setCancelReason(new TextComponent(pl.getBannedNameMessage(result.getString("operator"), result.getString("name"))));
 					e.setCancelled(true);
 					pl.dbm.closeConnection();
 					return;

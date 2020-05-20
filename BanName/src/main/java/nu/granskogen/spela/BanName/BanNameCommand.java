@@ -113,11 +113,13 @@ public class BanNameCommand extends Command implements TabExecutor {
 			pl.dbm.closeConnection();
 			
 			if(offlinePlayer != null && offlinePlayer.isConnected()) {
-				offlinePlayer.disconnect(new TextComponent(pl.getBannedNameMessage(operator, dateTime)));
+				offlinePlayer.disconnect(new TextComponent(pl.getBannedNameMessage(operator, name)));
 			}
 			
 			pl.getProxy().getPluginManager().callEvent(new BannedNameEvent(operator, dateTime, name));
 			pl.sendMessageToCommandSenderFromConfig(sender, "operatorSuccessMessage", "{name}", name);
+			pl.sendNotificationToValidOnlinePlayers((sender instanceof ProxiedPlayer) ? (ProxiedPlayer) sender : null, name);
+			pl.sendNotificationToDiscord(operator, name, dateTime);
 		} else {
 			pl.sendMessageToCommandSenderFromConfig(sender, "error.noPermission");
 		}
