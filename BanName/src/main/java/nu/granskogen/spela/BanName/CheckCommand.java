@@ -20,7 +20,7 @@ public class CheckCommand extends Command implements TabExecutor {
 	BanName pl = BanName.getInstance();
 
 	public CheckCommand(String name) {
-		super(name);
+		super(name, "BanName.check");
 	}
 
 	@Override

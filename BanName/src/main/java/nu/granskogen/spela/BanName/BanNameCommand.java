@@ -25,7 +25,7 @@ public class BanNameCommand extends Command implements TabExecutor {
 	BanName pl = BanName.getInstance();
 
 	public BanNameCommand(String name) {
-		super(name);
+		super(name, "BanName.ban");
 	}
 
 

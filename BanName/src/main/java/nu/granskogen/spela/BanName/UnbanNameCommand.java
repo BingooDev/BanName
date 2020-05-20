@@ -24,7 +24,7 @@ public class UnbanNameCommand extends Command implements TabExecutor {
 	BanName pl = BanName.getInstance();
 
 	public UnbanNameCommand(String name) {
-		super(name);
+		super(name, "BanName.unban");
 	}
 
 	@Override
