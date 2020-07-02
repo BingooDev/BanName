@@ -87,7 +87,7 @@ public class BanName extends Plugin {
 	
 	public void sendNotificationToDiscord(String operator, String name, String time) {
 		int port = 3003;
-		try (Socket socket = new Socket("89.107.208.8", port)) {
+		try (Socket socket = new Socket("localhost", port)) {
 
 			OutputStream output = socket.getOutputStream();
 			JsonObject obj = new JsonObject();
