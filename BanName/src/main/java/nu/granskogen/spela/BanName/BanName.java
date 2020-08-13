@@ -63,7 +63,7 @@ public class BanName extends Plugin {
 	
 	public String getBanNotification(String operator, String name) {
 		String message = "";
-		for (String row : cfgm.getConfig().getStringList("messages.notification.layout")) {
+		for (String row : cfgm.getConfig().getStringList("messages.banMessage.notifications.layout")) {
 			message += row + "\n";
 		}
 		message = ChatColor.translateAlternateColorCodes('&', message.replace("%OPERATOR%", operator).replace("%NAME%", name));
