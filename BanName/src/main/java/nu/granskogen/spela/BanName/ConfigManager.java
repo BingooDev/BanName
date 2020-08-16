@@ -30,15 +30,15 @@ public class ConfigManager {
 		configfile = new File(pl.getDataFolder(), "config.yml");
 
 		if (!languagefile.exists()) {
-				InputStream stream = pl.getResourceAsStream("language.yml");
-				File dest = new File(pl.getDataFolder(), "language.yml");
-				copy(stream, dest);
+			InputStream stream = pl.getResourceAsStream("language.yml");
+			File dest = new File(pl.getDataFolder(), "language.yml");
+			copy(stream, dest);
 		}
 		if (!configfile.exists()) {
 			InputStream stream = pl.getResourceAsStream("config.yml");
 			File dest = new File(pl.getDataFolder(), "config.yml");
 			copy(stream, dest);
-	}
+		}
 
 		try {
 			languagecfg = ConfigurationProvider.getProvider(YamlConfiguration.class).load(languagefile);
@@ -47,20 +47,20 @@ public class ConfigManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void copy(InputStream in, File file) {
-	    try {
-	        OutputStream out = new FileOutputStream(file);
-	        byte[] buf = new byte[1024];
-	        int len;
-	        while((len=in.read(buf))>0){
-	            out.write(buf,0,len);
-	        }
-	        out.close();
-	        in.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		try {
+			OutputStream out = new FileOutputStream(file);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Configuration getLanguage() {
@@ -82,7 +82,7 @@ public class ConfigManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Configuration getConfig() {
 		return configcfg;
 	}
