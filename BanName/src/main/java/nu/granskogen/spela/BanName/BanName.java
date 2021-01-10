@@ -108,4 +108,28 @@ public class BanName extends Plugin {
 			System.out.println("I/O error: " + ex.getMessage());
 		}
 	}
+	
+	public void sendUnBanNotificationToDiscord(String operator, String name, String time) {
+		int port = 3003;
+		try (Socket socket = new Socket("localhost", port)) {
+
+			OutputStream output = socket.getOutputStream();
+			JsonObject obj = new JsonObject();
+			
+			obj.addProperty("type","UnBanName"); 
+			obj.addProperty("punished", name);
+			obj.addProperty("operator", operator);
+			obj.addProperty("time", time);
+			output.write(obj.toString().getBytes());
+
+			socket.close();
+		} catch (UnknownHostException ex) {
+
+			System.out.println("Server not found: " + ex.getMessage());
+
+		} catch (IOException ex) {
+
+			System.out.println("I/O error: " + ex.getMessage());
+		}
+	}
 }

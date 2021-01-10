@@ -94,6 +94,7 @@ public class UnbanNameCommand extends Command implements TabExecutor {
 					.callEvent(new UnbannedNameEvent(operator, dateTime, name));
 			pl.sendMessageToCommandSenderFromConfig(sender, "unban", "{name}",
 					name);
+			pl.sendUnBanNotificationToDiscord(sender.getName(), name, dateTime);
 		} else {
 			pl.sendMessageToCommandSenderFromConfig(sender, "error.noPermission");
 		}
