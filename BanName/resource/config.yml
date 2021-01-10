@@ -31,7 +31,7 @@ messages:
     - "  &4&l» &7Lagd av: &c%OPERATOR%"
     - ''
     - '&4&m----------------------------------------------'
-  sytax:
+  syntax:
     banName: "&7Syntax: /banName <spelarnamn>"
     unbanName: "&7Syntax: /unbanName <spelarnamn>"
   error:
