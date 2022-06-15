@@ -21,7 +21,7 @@ public class DataBaseManager {
 				return true;
 			}
 			
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			this.host = pl.cfgm.getConfig().getString("database.host");
 			this.database = pl.cfgm.getConfig().getString("database.database");
 			this.username = pl.cfgm.getConfig().getString("database.username");
