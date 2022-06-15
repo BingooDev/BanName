@@ -1,0 +1,43 @@
+database:
+  host: ''
+  database: ''
+  username: ''
+  password: ''
+
+messages:
+  kickReason: "&cDitt namn är inte tillåtet på Granskogen. Du är välkommen tillbaka när du har bytt namn."
+  operatorSuccessMessage: "&aNamnet &2{name} &aär nu bannlyst från servern."
+  unban: "&aNamnet &2{name} &aär nu inte bannlyst från servern."
+  banMessage:
+    layout:
+    - ''
+    - '&8&m+------&8[&4&lBannlysning av Användarnamn&8]&m------+'
+    - ''
+    - '&2&l» &a&lAnledning: &fNamnet %NAME% är bannlyst på Granskogen.'
+    - 'Det betyder att du måste byta namn innan du kan logga in igen.'
+    - ''
+    - '&2&l» &a&lBannlyst av: &f%OPERATOR%'
+    - ''
+    - '&2&l» &a&lDiscord: &fdiscord.granskogen.nu'
+    - '&2&l» &a&lMail: &fsupport@granskogen.nu'
+    - ''
+    - '&8&m+-------------------------------------------+'
+  notifications:
+    layout:
+    - ''
+    - '&4&m----------------------------------------------'
+    - ''
+    - "  &e&lNamnet %NAME% &7har blivit &cBannlyst &c&l(Permanent)"
+    - "  &4&l» &7Lagd av: &c%OPERATOR%"
+    - ''
+    - '&4&m----------------------------------------------'
+  syntax:
+    banName: "&7Syntax: /banName <spelarnamn>"
+    unbanName: "&7Syntax: /unbanName <spelarnamn>"
+  error:
+    noPermission: "&cÅtkomst nekad!"
+    alreadyBanned: "&cNamnet är redan bannlyst."
+    notBanned: "&cNamnet är inte bannlyst."
+    SQL: "&cSQL fel. Kontakta ledningen."
+    statusBanned: "&cNamnet &4{name} &cär bannlyst."
+    statusNotBanned: "&aNamnet &2{name} &aär inte bannlyst."
